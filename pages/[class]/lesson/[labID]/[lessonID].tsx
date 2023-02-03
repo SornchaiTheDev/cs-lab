@@ -29,8 +29,8 @@ function LabID({ metadata, content, answers, isClosed, title }: Props) {
             title="CS Python Lab 01 Input Process Output | CS LAB"
         >
             <Sidebar />
-            <div className="flex justify-center gap-10">
-                <div className="w-full md:w-2/3 2xl:w-1/2 md:px-10 mt-10">
+            <div className="flex justify-center gap-10 p-4">
+                <div className="w-full md:w-2/3 2xl:w-1/2 md:px-10 md:mt-10">
                     <BackArrow />
 
                     <div className="mt-4 mb-6">
