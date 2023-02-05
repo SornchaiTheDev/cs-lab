@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import WithEmail from '@/components/Login/WithEmail'
+import WithUsernamePassword from '@/components/Login/WithUsernamePassword'
 import Divider from '@/components/Login/Divider'
 import Github from '@/components/Login/Github'
 import WithGoogle from '@/components/Login/WithGoogle'
@@ -19,7 +19,7 @@ const Login: NextPage = () => {
                         <div className="w-full flex flex-col items-center mt-6 gap-6">
                             <WithGoogle />
                             <Divider />
-                            <WithEmail />
+                            <WithUsernamePassword />
                         </div>
                         <Github />
                     </div>

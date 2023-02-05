@@ -8,13 +8,16 @@ import axios from 'axios'
 import { BiLoaderCircle } from 'react-icons/bi'
 import clsx from 'clsx'
 
-interface Props {}
-function Header({}: Props) {
+interface Props {
+    onRun?: () => void
+}
+function Header({ onRun }: Props) {
     const [saveStatus, setsaveStatus] = useState<'saving' | 'saved'>('saved')
     const [status, setStatus] = useState<'running' | 'error' | 'idle'>('idle')
     const { code, input } = useAppSelector((state) => state.editor)
     const dispatch = useAppDispatch()
     const handleOnRun = async () => {
+        if (!!onRun) onRun()
         dispatch(openBottomBar())
         dispatch(setBottomBarTab('output'))
         dispatch(setOutput(''))

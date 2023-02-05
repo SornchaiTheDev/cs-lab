@@ -13,7 +13,7 @@ function Select({ selected, onSelect }: Props) {
             <button
                 onClick={() => onSelect('code')}
                 className={clsx(
-                    'px-4 py-1 rounded-full flex items-center gap-2',
+                    'px-4 py-1 rounded-full flex items-center gap-2 transition-colors delay-100',
                     selected === 'code' &&
                         'bg-zinc-800 text-white dark:bg-gray-200 dark:text-gray-900'
                 )}
@@ -24,7 +24,7 @@ function Select({ selected, onSelect }: Props) {
             <button
                 onClick={() => onSelect('input')}
                 className={clsx(
-                    'px-4 py-1 rounded-full flex items-center gap-2',
+                    'px-4 py-1 rounded-full flex items-center gap-2 transition-colors delay-100',
                     selected === 'input' &&
                         'bg-zinc-800 text-white dark:bg-gray-200 dark:text-gray-900'
                 )}
@@ -35,7 +35,7 @@ function Select({ selected, onSelect }: Props) {
             <button
                 onClick={() => onSelect('output')}
                 className={clsx(
-                    'px-4 py-1 rounded-full flex items-center gap-2',
+                    'px-4 py-1 rounded-full flex items-center gap-2 transition-colors delay-100',
                     selected === 'output' &&
                         'bg-zinc-800 text-white dark:bg-gray-200 dark:text-gray-900'
                 )}

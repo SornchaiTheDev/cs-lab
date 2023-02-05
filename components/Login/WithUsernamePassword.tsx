@@ -3,46 +3,35 @@ import { BsArrowRightCircle } from 'react-icons/bs'
 import { BiLoaderCircle } from 'react-icons/bi'
 import clsx from 'clsx'
 import { useRouter } from 'next/router'
-import { signInWithEmail } from '@/services/signin'
+import { signInWithUsernameAndPassword } from '@/services/signin'
 
 function WithEmail() {
-    const [step, setStep] = useState<'email' | 'password'>('email')
-    const [email, setEmail] = useState('')
+    const [step, setStep] = useState<'username' | 'password'>('username')
+    const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const [error, setError] = useState<'email' | 'failed' | null>(null)
+    const [error, setError] = useState(false)
     const [isSubmit, setIsSubmit] = useState(false)
     const passwordRef = useRef<HTMLInputElement>(null)
     const router = useRouter()
 
     const handleOnSubmit = (e: FormEvent) => {
         e.preventDefault()
-        setError(null)
 
-        switch (step) {
-            case 'email':
-                if (
-                    /^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$/.test(email) ===
-                    false
-                ) {
-                    setError('email')
-                    break
-                }
-                setStep('password')
-                break
-            case 'password':
-                setIsSubmit(true)
-                signInWithEmail({ email, password })
-                    .then(({ status }) => {
-                        if (status === 'failed') {
-                            setIsSubmit(false)
-                            return setError('failed')
-                        }
-
-                        router.push('/')
-                    })
-                    .catch((e) => console.log(e))
-                break
+        if (step != 'password') {
+            return setStep('password')
         }
+
+        setIsSubmit(true)
+        signInWithUsernameAndPassword({ username, password })
+            .then(({ status }) => {
+                if (status === 'failed') {
+                    setIsSubmit(false)
+                    return setError(true)
+                }
+
+                router.push('/')
+            })
+            .catch((e) => console.log(e))
     }
 
     useEffect(() => {
@@ -53,33 +42,28 @@ function WithEmail() {
         <form onSubmit={handleOnSubmit} className="w-full">
             <div className="relative w-full">
                 <input
-                    inputMode="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="อีเมล"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="ชื่อผู้ใช้"
                     className={clsx(
                         'py-3 px-4 w-full border outline-none focus:ring-1 dark:bg-secondary-1 dark:text-ascent-1',
-                        step === 'email' ? 'rounded-lg' : 'rounded-t-lg',
-                        error && ['email', 'failed'].includes(error)
+                        step === 'username' ? 'rounded-lg' : 'rounded-t-lg',
+                        error
                             ? 'border-red-500 focus:ring-red-500'
                             : 'dark:border-secondary-2'
                     )}
                 />
-                {step === 'email' ? (
+                {step === 'username' && (
                     <button
                         type="submit"
                         className="absolute top-1/2 -translate-y-1/2 right-3 rounded-full"
                     >
                         <BsArrowRightCircle className="text-lg text-ascent-1" />
                     </button>
-                ) : null}
+                )}
             </div>
-            {error === 'email' ? (
-                <p className="text-sm my-2 text-red-500">
-                    รูปแบบอีเมลไม่ถูกต้อง
-                </p>
-            ) : null}
-            {step === 'password' ? (
+
+            {step === 'password' && (
                 <>
                     <div className="relative w-full">
                         <input
@@ -90,7 +74,7 @@ function WithEmail() {
                             placeholder="รหัสผ่าน"
                             className={clsx(
                                 'py-3 px-4 w-full border outline-none dark:bg-secondary-1 dark:text-ascent-1 rounded-b',
-                                error === 'failed'
+                                error
                                     ? 'border-red-500 focus:ring-red-500'
                                     : 'dark:border-secondary-2'
                             )}
@@ -108,13 +92,13 @@ function WithEmail() {
                         </button>
                     </div>
 
-                    {error === 'failed' ? (
+                    {error && (
                         <p className="text-sm my-2 text-red-500">
-                            อีเมลหรือรหัสผ่านไม่ถูกต้อง
+                            ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง
                         </p>
-                    ) : null}
+                    )}
                 </>
-            ) : null}
+            )}
         </form>
     )
 }

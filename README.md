@@ -1,6 +1,6 @@
 ## CS Lab
 
-### ENV File
+### env File
 ```env
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
