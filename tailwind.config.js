@@ -1,11 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     darkMode: 'class',
-    content: [
-        './pages/**/*.{js,ts,jsx,tsx}',
-        './components/**/*.{js,ts,jsx,tsx}',
-        './layouts/**/*.{js,ts,jsx,tsx}',
-    ],
+    content: ['./src/**/*.{js,ts,jsx,tsx}'],
     theme: {
         extend: {
             typography: () => ({
@@ -29,8 +25,8 @@ module.exports = {
                 'secondary-1': '#33373A',
                 'secondary-2': '#6B6B6B',
                 'ascent-1': '#E0E2E8',
-                'red-1' : '#FEAFA8',
-                'green-1' :'#84D586',
+                'red-1': '#FEAFA8',
+                'green-1': '#84D586',
             },
         },
     },

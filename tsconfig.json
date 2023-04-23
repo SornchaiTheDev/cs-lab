@@ -16,9 +16,15 @@
         "incremental": true,
         "baseUrl": ".",
         "paths": {
-            "@/*": ["./*"]
+            "@/*": ["./src/*"],
+            "@public/*": ["./public/*"]
         }
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "__mock__/LessonMD.mdx"],
+    "include": [
+        "next-env.d.ts",
+        "**/*.ts",
+        "**/*.tsx",
+        "src/__mock__/LessonMD.mdx"
+    ],
     "exclude": ["node_modules"]
 }
