@@ -2,10 +2,90 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id        String   @id @default(uuid())
+    email     String   @unique
+    username  String?
+    password  String?
+    sections  Section?  @relation(fields: [sectionId], references: [id])
+    sectionId String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Section {
+    id        String   @id @default(uuid())
+    name      String
+    labs      Lab[]
+    users     User[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Lab {
+    id          String    @id @default(uuid())
+    name        String
+    description String?
+    section     Section   @relation(fields: [sectionId], references: [id])
+    sectionId   String
+    problems    Problem[]
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+}
+
+model Problem {
+    id          String   @id @default(uuid())
+    name        String
+    description String?
+    lab         Lab      @relation(fields: [labId], references: [id])
+    labId       String
+    tasks       Task[]
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+}
+
+model Task {
+    id            String          @id @default(uuid())
+    name          String?
+    description   String?
+    code          String
+    problem       Problem         @relation(fields: [problemId], references: [id])
+    problemId     String
+    testCases     testCases[]
+    historySubmit HistorySubmit[]
+    createdAt     DateTime        @default(now())
+    updatedAt     DateTime        @updatedAt
+}
+
+model testCases {
+    id        String   @id @default(uuid())
+    task      Task     @relation(fields: [taskId], references: [id])
+    taskId    String
+    input     String
+    output    String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model HistorySubmit {
+    id        String   @id @default(uuid())
+    userId    String
+    task      Task     @relation(fields: [taskId], references: [id])
+    taskId    String
+    code      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model EmailAccess {
+    id    Int
+    email String @unique
 }

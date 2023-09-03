@@ -3,20 +3,7 @@ import NextAuth, { Account, NextAuthOptions, Profile } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import jwt from 'jsonwebtoken'
 import { io } from 'socket.io-client'
-
-const checkIn = () => {
-    return new Promise((resolve, reject) => {
-        try {
-            const socket = io('http://10.147.18.161:3000/socket')
-            socket.on('connect', () => {
-                socket.emit('checkIn', 'test')
-                resolve(true)
-            })
-        } catch (e) {
-            reject(e)
-        }
-    })
-}
+import { prisma } from '@/server/db'
 
 export default NextAuth({
     providers: [
@@ -39,11 +26,33 @@ export default NextAuth({
                     //@ts-ignore
                     profile.email.endsWith('@ku.th')
                 ) {
-                    // let checkInResult = await checkIn()
-                    // if (checkInResult) {
-                    //     return true
-                    // }
-                    // return false
+                    const res = await prisma.emailAccess.findUnique({
+                        where: {
+                            email: profile.email,
+                        },
+                    })
+
+                    if (!res) {
+                        throw new Error('you are not allow to access this site')
+                    }
+
+                    //check if user is in the database
+                    const user = await prisma.user.findUnique({
+                        where: {
+                            email: profile.email,
+                        },
+                    })
+
+                    if (!user) {
+                        //if not create user
+                        await prisma.user.create({
+                            data: {
+                                email: profile.email!,
+                                sections: {},
+                            },
+                        })
+                    }
+
                     return true
                 } else {
                     throw new Error('not-authorize')
@@ -52,23 +61,11 @@ export default NextAuth({
             throw new Error('Sign in provider not supported')
         },
         async jwt({ token, account, isNewUser, profile, user }) {
-            let ress = await axios.post(
-                process.env.API_BASE_URL! + '/auth/verifyToken',
-                {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${jwt.sign(
-                            {
-                                email: token.email,
-                            },
-                            process.env.NEXTAUTH_SECRET!
-                        )}`,
-                    },
-                }
-            )
+            console.log(user)
+
             return {
                 ...token,
-                ...ress.data.resData,
+                ...user
             }
         },
         async session({ session, user, token }) {
